@@ -35,4 +35,16 @@ export class CertificadosService {
     if (!certificado) return null;
     return this.certificadoRepo.remove(certificado);
   }
+
+  async getCertificadoInfo(id: number) {
+    return this.certificadoRepo.findOne({
+      where: { id },
+      relations: [
+        'empleado',
+        'empleado.cargo',
+        'empleado.cargo.funciones',
+      ],
+    });
+  }
+
 }
