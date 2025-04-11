@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import * as nodemailer from 'nodemailer';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService {
@@ -13,20 +14,21 @@ export class UsuariosService {
 
   async login(cedula_o_correo: string) {
     const usuario = await this.usuarioRepo.findOne({
-      where: [
-        { correo: cedula_o_correo },
-        { cedula: cedula_o_correo },
-      ],
+      where: [{ correo: cedula_o_correo }, { cedula: cedula_o_correo }],
     });
 
     if (!usuario) {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    const codigo = Math.floor(100000 + Math.random() * 900000).toString(); // Código de 6 dígitos
-    const expira = new Date(Date.now() + 5 * 60000); // Expira en 5 minutos
+    const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+    const expira = new Date(Date.now() + 5 * 60000);
 
-    usuario.codigo_verificacion = codigo;
+    // Encriptar el código antes de guardarlo
+    const salt = await bcrypt.genSalt();
+    const hashedCode = await bcrypt.hash(codigo, salt);
+
+    usuario.codigo_verificacion = hashedCode;
     usuario.codigo_expira = expira;
     await this.usuarioRepo.save(usuario);
 

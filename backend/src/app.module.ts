@@ -13,6 +13,7 @@ import { DepartamentosModule } from './departamentos/departamentos.module';
 import { TiposContratoModule } from './tipos-contrato/tipos-contrato.module';
 import { CertificadosModule } from './certificados/certificados.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { FuncionesModule } from './funciones/funciones.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     TiposContratoModule,
     CertificadosModule,
     UsuariosModule,
+    FuncionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
