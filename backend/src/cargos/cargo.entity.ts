@@ -2,8 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Empleado } from '../empleados/empleado.entity';
 import { Funcion } from '../funciones/funcion.entity';
 
-
-
 @Entity('cargos')
 export class Cargo {
   @PrimaryGeneratedColumn()
