@@ -14,6 +14,7 @@ import { TiposContratoModule } from './tipos-contrato/tipos-contrato.module';
 import { CertificadosModule } from './certificados/certificados.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { FuncionesModule } from './funciones/funciones.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { FuncionesModule } from './funciones/funciones.module';
     CertificadosModule,
     UsuariosModule,
     FuncionesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Rol } from '../roles/rol.entity';
+import { ManyToOne } from 'typeorm';
 
 @Entity('usuarios')
 export class Usuario {
@@ -16,4 +18,6 @@ export class Usuario {
 
   @Column({ type: 'timestamp', nullable: true })
   codigo_expira: Date;
+  @ManyToOne(() => Rol, (rol) => rol.usuarios)
+  rol: Rol;
 }
