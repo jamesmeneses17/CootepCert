@@ -61,7 +61,12 @@ export class CertificadosController {
     const funciones = cargo.funciones;
 
     // Leer el logo como base64
-    const logoPath = path.join(process.cwd(), 'src', 'assets', 'logo_cootep.png');
+    const logoPath = path.join(
+      process.cwd(),
+      'src',
+      'assets',
+      'logo_cootep.png',
+    );
     const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 
     const docDefinition = {
@@ -143,7 +148,10 @@ export class CertificadosController {
     const pdfDoc = pdfMake.createPdf(docDefinition);
     pdfDoc.getBuffer((buffer: Buffer) => {
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename=certificado.pdf');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=certificado.pdf',
+      );
       res.send(buffer);
     });
   }

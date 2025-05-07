@@ -8,6 +8,7 @@ import {
   import { Empleado } from '../empleados/empleado.entity';
   
   @Entity('certificados')
+  
   export class Certificado {
     @PrimaryGeneratedColumn()
     id: number;
