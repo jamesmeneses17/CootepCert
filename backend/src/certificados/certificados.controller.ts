@@ -12,7 +12,6 @@ import { Response } from 'express';
 import { CertificadosService } from './certificados.service';
 import { Certificado } from './certificado.entity';
 
-
 @Controller('certificados')
 export class CertificadosController {
   constructor(private readonly certificadosService: CertificadosService) {}
@@ -44,16 +43,19 @@ export class CertificadosController {
 
   // Endpoint para generar y descargar el PDF del certificado
 
- @Get(':id/generar')
-async generarPdf(@Param('id') id: string, @Res() res: Response) {
-  const buffer = await this.certificadosService.generarPdfBuffer(+id);
+  @Get(':id/generar')
+  async generarPdf(@Param('id') id: string, @Res() res: Response) {
+    // Genera el PDF y lo guarda en un buffer
+    const buffer = await this.certificadosService.generarPdfBuffer(+id);
 
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'attachment; filename=certificado.pdf');
-  res.send(buffer);
-}
+    //Configura los headers para la descarga del PDF
 
-  
-
-
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename=certificado.pdf',
+    );
+    // Envía el buffer como respuesta
+    res.send(buffer);
+  }
 }
