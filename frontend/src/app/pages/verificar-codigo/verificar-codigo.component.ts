@@ -43,17 +43,40 @@ export class VerificarCodigoComponent {
     });
   }
 
+  contador: number = 0;
+temporizador: any;
+
+
   reenviarCodigo() {
-    this.http.post('http://localhost:3000/usuarios/login', {
-      correo_o_cedula: this.correoOCedula,
-    }).subscribe({
-      next: () => {
-        this.mensaje = '📨 Código reenviado al correo';
-      },
-      error: (err) => {
-        this.mensaje = '❌ Error al reenviar el código';
-        console.error(err);
+  if (this.contador > 0) return; // Evita reenviar si el contador no ha terminado
+
+  const identificador = localStorage.getItem('usuario_temp');
+  if (!identificador) return;
+
+  this.http.post('http://localhost:3000/usuarios/login', {
+    correo_o_cedula: identificador,
+  }).subscribe({
+    next: (res: any) => {
+      this.mensaje = res.message;
+
+      if (res.message.includes('reenviado') || res.message.includes('enviado')) {
+        this.iniciarContador(); // 🔄 Inicia el temporizador
       }
-    });
-  }
+    },
+    error: (err) => {
+      this.mensaje = 'Error al reenviar código.';
+    }
+  });
+}
+
+iniciarContador() {
+  this.contador = 60;
+  this.temporizador = setInterval(() => {
+    this.contador--;
+    if (this.contador <= 0) {
+      clearInterval(this.temporizador);
+    }
+  }, 1000);
+}
+
 }

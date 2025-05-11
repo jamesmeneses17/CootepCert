@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -24,28 +29,32 @@ export class LoginComponent {
     });
   }
 
-  enviarCodigo() {
+  public enviarCodigo() {
     const { identificador } = this.loginForm.value;
-  
-    this.http.post('http://localhost:3000/usuarios/login', {
-      correo_o_cedula: identificador,
-    }).subscribe({
-      next: (res) => {
-        this.mensaje = 'Código enviado correctamente al correo.';
-        this.loginForm.reset();
-  
-        // Guardar temporalmente el identificador
-        localStorage.setItem('usuario_temp', identificador);
-  
-        // 👉 Redirigir a /verificar
-        this.router.navigate(['/verificar']);
-      },
-      error: (err) => {
-        this.mensaje = 'Error al enviar el código.';
-        console.error(err);
-        this.loginForm.reset();
-      }
-    });
+
+    this.http
+      .post('http://localhost:3000/usuarios/login', {
+        correo_o_cedula: identificador,
+      })
+      .subscribe({
+  next: (res: any) => {
+    this.mensaje = res.message;
+
+    // Solo redirige si fue exitoso
+    if (
+      res.message.includes('enviado') ||
+      res.message.includes('reenviado')
+    ) {
+      localStorage.setItem('usuario_temp', identificador);
+      this.router.navigate(['/verificar']);
+    }
+  },
+  error: (err) => {
+    this.mensaje = 'Error al enviar el código.';
+    console.error(err);
+    this.loginForm.reset();
   }
-  
+});
+
+  }
 }

@@ -26,31 +26,70 @@ export class UsuariosService {
       throw new NotFoundException('Usuario no encontrado en la base de datos');
     }
 
+    const ahora = new Date();
+
+    // si el codigo aun es valido (no ha expirado)
+    if (usuario.codigo_expira && usuario.codigo_expira > ahora) {
+      // si el ultimo reenvio fue hace menos de 60 segundos
+      if (
+        usuario.ultimo_reenvio &&
+        ahora.getTime() - usuario.ultimo_reenvio?.getTime() < 60 * 1000
+      ) {
+        const segundosRestantes = Math.ceil(
+          (60 * 1000 - (ahora.getTime() - usuario.ultimo_reenvio?.getTime())) /
+            1000,
+        );
+        return {
+          message:
+            'Debes esperar ${segundosRestantes} segundos para volver a enviar el código',
+        };
+      }
+
+      // Reenviar el mismo codigo
+      usuario.ultimo_reenvio = ahora;
+      await this.usuarioRepo.save(usuario);
+
+      await this.enviarCorreo(
+        usuario.correo,
+        usuario.cedula,
+        usuario.codigo_verificacion,
+      );
+      return {
+        message: 'Código reenviado al correo',
+        correo: usuario.correo,
+      };
+    }
+
     // Genera un codigo aleatorio de 6 digitos
     const codigo = Math.floor(100000 + Math.random() * 900000).toString();
     // Define una fecha de expiracion para el codigo, 5 minutos
     const expira = new Date(Date.now() + 5 * 60000);
 
     // Encripta el codigo de verificacion usando bcrypt
-    const salt = await bcrypt.genSalt();
-    const hashedCode = await bcrypt.hash(codigo, salt);
+    //const salt = await bcrypt.genSalt();
+    //const hashedCode = await bcrypt.hash(codigo, salt);
 
     //Guarda el codigo encriptado y su expiracion en la BD
-    usuario.codigo_verificacion = hashedCode;
+    //usuario.codigo_verificacion = hashedCode;
+    usuario.codigo_verificacion = codigo;
     usuario.codigo_expira = expira;
     await this.usuarioRepo.save(usuario);
 
-    //Muestra en consola la configuracion SMTP
-    console.log('📡 Configuración SMTP →', {
-      host: process.env.MAIL_HOST, // Direccion del servidor del proveedor de correo "smtp.gmail.com"
-      port: process.env.MAIL_PORT, // Puerto del servidor SMTP "587"
-      user: process.env.MAIL_USER, // Usuario del correo que envia el mensaje
-      pass: process.env.MAIL_PASS ? '********' : '❌ no encontrada',
-    });
+    await this.enviarCorreo(usuario.correo, usuario.cedula, codigo);
 
-    // Configura el servicio de envio de correos usando nodemailer
+    // Respuesta de exito al cliente
+
+    return {
+      message: 'Código enviado al correo',
+      correo: usuario.correo,
+    };
+  }
+  private async enviarCorreo(
+    correo: string,
+    cedula: string,
+    codigo_verificacion: string,
+  ) {
     const transporter = nodemailer.createTransport({
-      // Crea un transporte a traves de servidor SMTP
       host: process.env.MAIL_HOST,
       port: Number(process.env.MAIL_PORT),
       secure: false,
@@ -60,20 +99,15 @@ export class UsuariosService {
       },
     });
 
-    // Envia el correo con el codigo de verificacion al usuario
+    console.log(
+      ` Enviando código ${codigo_verificacion} al correo: ${correo}`,
+    );
 
     await transporter.sendMail({
       from: `"CootepCert" <${process.env.MAIL_USER}>`,
-      to: usuario.correo,
+      to: correo,
       subject: 'Tu código de verificación',
-      text: `Hola ${usuario.cedula}, tu código de ingreso es: ${codigo}`,
+      text: `Hola ${cedula}, tu código de ingreso es: ${codigo_verificacion}`,
     });
-
-    // Respuesta de exito al cliente
-
-    return {
-      message: 'Código enviado al correo',
-      correo: usuario.correo,
-    };
   }
 }
