@@ -99,9 +99,7 @@ export class UsuariosService {
       },
     });
 
-    console.log(
-      ` Enviando código ${codigo_verificacion} al correo: ${correo}`,
-    );
+    console.log(` Enviando código ${codigo_verificacion} al correo: ${correo}`);
 
     await transporter.sendMail({
       from: `"CootepCert" <${process.env.MAIL_USER}>`,
@@ -109,5 +107,47 @@ export class UsuariosService {
       subject: 'Tu código de verificación',
       text: `Hola ${cedula}, tu código de ingreso es: ${codigo_verificacion}`,
     });
+  }
+
+  // Metodo para verificar el codigo de verificacion
+  async verificarCodigo(correo_o_cedula: string, codigo: string) {
+    console.log('Verificando código para:', correo_o_cedula, codigo);
+    const usuario = await this.usuarioRepo.findOneOrFail({
+      where: [
+        {
+          correo: correo_o_cedula,
+        },
+        { cedula: correo_o_cedula },
+      ],
+      relations: ['rol', 'empleado'],
+    });
+
+    if (!usuario) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    const ahora = new Date();
+
+    // Verificar si el código ha expirado
+    if (!usuario.codigo_expira || usuario.codigo_expira < ahora) {
+      return { message: 'El código ha expirado, solicita uno nuevo.' };
+    }
+
+    // Validar si el código coincide (no encriptado)
+    if (usuario.codigo_verificacion !== codigo) {
+      return { message: 'Código incorrecto' };
+    }
+
+    // Retornar el rol o exito
+
+    return {
+      message: 'Código verificado correctamente',
+      rol: usuario.rol?.nombre,
+      usuario: {
+        nombres: usuario.empleado?.nombres,
+        apellidos: usuario.empleado?.apellidos,
+        correo: usuario.correo,
+      },
+    };
   }
 }

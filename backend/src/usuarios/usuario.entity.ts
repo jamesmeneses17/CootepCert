@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Rol } from '../roles/rol.entity';
 import { ManyToOne } from 'typeorm';
+import { Empleado } from '../empleados/empleado.entity'; // asegúrate de que exista
+
 
 // Definicion de la entidad usuario
 @Entity('usuarios')
@@ -33,4 +35,9 @@ export class Usuario {
   //Relacion con la entidad ROL, muchos usuarios pueden tener el mismo rol
   @ManyToOne(() => Rol, (rol) => rol.usuarios)
   rol: Rol;
+
+  //Relacion con la entidad empleado
+
+  @ManyToOne(() => Empleado)
+empleado: Empleado;
 }

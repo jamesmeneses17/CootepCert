@@ -13,4 +13,12 @@ export class UsuariosController {
     //LLama al meotodo login del servicio , pasando el valor del body
     return this.usuariosService.login(valor);
   }
+
+  // Endpoint para validar el rol
+
+  @Post('verificar')
+async verificarCodigo(@Body() body: { correo_o_cedula: string; codigo: string }) {
+  return this.usuariosService.verificarCodigo(body.correo_o_cedula, body.codigo);
+}
+
 }
