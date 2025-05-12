@@ -27,23 +27,34 @@ export class VerificarCodigoComponent {
     }
   }
 
-  verificarCodigo() {
-    this.http
-      .post('http://localhost:3000/usuarios/verificar', {
-        correo_o_cedula: this.correoOCedula,
-        codigo: this.codigo,
-      })
-      .subscribe({
-        next: (res: any) => {
-          this.mensaje = '✅ Código verificado con éxito';
-          // this.router.navigate(['/dashboard']);
-        },
-        error: (err) => {
-          this.mensaje = '❌ Código incorrecto o expirado';
-          console.error(err);
-        },
-      });
-  }
+ verificarCodigo() {
+  this.http.post('http://localhost:3000/usuarios/verificar', {
+    correo_o_cedula: this.correoOCedula,
+    codigo: this.codigo,
+  }).subscribe({
+    next: (res: any) => {
+      this.mensaje = ' Código verificado con éxito';
+
+      // Guardar en localStorage el usuario autenticado
+      localStorage.setItem('usuario', JSON.stringify(res.usuario));
+      localStorage.setItem('rol', res.rol);
+
+      // Redireccionar según el rol
+      if (res.rol === 'admin') {
+        this.router.navigate(['/admin']);
+      } else if (res.rol === 'empleado') {
+        this.router.navigate(['/empleado']);
+      } else {
+        this.mensaje = ' Rol no reconocido';
+      }
+    },
+    error: (err) => {
+      this.mensaje = ' Código incorrecto o expirado';
+      console.error(err);
+    }
+  });
+}
+
 
   contador: number = 0;
   temporizador: any;
