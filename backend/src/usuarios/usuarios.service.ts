@@ -19,6 +19,7 @@ export class UsuariosService {
     // Busca el usuario por correo o cédula
     const usuario = await this.usuarioRepo.findOne({
       where: [{ correo: cedula_o_correo }, { cedula: cedula_o_correo }],
+      relations: ['empleado'], // Obtiene nombres y apellidos del empleado
     });
 
     // condicion , sino se encuentra el usuario lanzamos una excepcion
@@ -51,9 +52,10 @@ export class UsuariosService {
 
       await this.enviarCorreo(
         usuario.correo,
-        usuario.cedula,
+        `${usuario.empleado?.nombres} ${usuario.empleado?.apellidos}`,
         usuario.codigo_verificacion,
       );
+
       return {
         message: 'Código reenviado al correo',
         correo: usuario.correo,
@@ -71,11 +73,16 @@ export class UsuariosService {
 
     //Guarda el codigo encriptado y su expiracion en la BD
     //usuario.codigo_verificacion = hashedCode;
+
     usuario.codigo_verificacion = codigo;
     usuario.codigo_expira = expira;
     await this.usuarioRepo.save(usuario);
 
-    await this.enviarCorreo(usuario.correo, usuario.cedula, codigo);
+    await this.enviarCorreo(
+      usuario.correo,
+      `${usuario.empleado?.nombres} ${usuario.empleado?.apellidos}`,
+      codigo,
+    );
 
     // Respuesta de exito al cliente
 
@@ -86,7 +93,7 @@ export class UsuariosService {
   }
   private async enviarCorreo(
     correo: string,
-    cedula: string,
+    nombreCompleto: string,
     codigo_verificacion: string,
   ) {
     const transporter = nodemailer.createTransport({
@@ -99,13 +106,21 @@ export class UsuariosService {
       },
     });
 
-    console.log(` Enviando código ${codigo_verificacion} al correo: ${correo}`);
+    const mensaje = `
+Hola ${nombreCompleto},
+
+Tu código de verificación para ingresar a la plataforma es: ${codigo_verificacion}.
+
+Este código es válido por 5 minutos.
+
+Gracias por utilizar CootepCert.
+`;
 
     await transporter.sendMail({
       from: `"CootepCert" <${process.env.MAIL_USER}>`,
       to: correo,
       subject: 'Tu código de verificación',
-      text: `Hola ${cedula}, tu código de ingreso es: ${codigo_verificacion}`,
+      text: mensaje,
     });
   }
 
