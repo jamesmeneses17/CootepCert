@@ -22,7 +22,7 @@ async function bootstrap() {
     .setDescription('Documentación de la API para autenticación y certificados laborales')
     .setVersion('1.0')
     .addTag('auth') // puedes usar varios tags como empleados, certificados, etc.
-    .build();
+    .build(); //h
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document); // Esto crea la ruta http://localhost:3000/api
