@@ -7,12 +7,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-verificar-codigo',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule, // 👈 necesario para usar [(ngModel)]
-    ReactiveFormsModule,
-    HttpClientModule,
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './verificar-codigo.component.html',
 })
 export class VerificarCodigoComponent {
@@ -27,34 +22,45 @@ export class VerificarCodigoComponent {
     }
   }
 
- verificarCodigo() {
-  this.http.post('http://localhost:3000/usuarios/verificar', {
-    correo_o_cedula: this.correoOCedula,
-    codigo: this.codigo,
-  }).subscribe({
-    next: (res: any) => {
-      this.mensaje = ' Código verificado con éxito';
+  verificarCodigo() {
+    this.http
+      .post('http://localhost:3000/usuarios/verificar', {
+        correo_o_cedula: this.correoOCedula,
+        codigo: this.codigo,
+      })
+      .subscribe({
+        next: (res: any) => {
+          console.log('Respuesta del backend:', res);
+          console.log('Empleado ID:', res.usuario.empleadoId);
 
-      // Guardar en localStorage el usuario autenticado
-      localStorage.setItem('usuario', JSON.stringify(res.usuario));
-      localStorage.setItem('rol', res.rol);
+          const empleadoId = res.usuario.empleadoId;
+          if (empleadoId) {
+            localStorage.setItem('empleadoId', empleadoId.toString());
+          } else {
+            console.warn('⚠ No se recibió empleadoId en la respuesta');
+          }
 
-      // Redireccionar según el rol
-      if (res.rol === 'admin') {
-        this.router.navigate(['/admin']);
-      } else if (res.rol === 'empleado') {
-        this.router.navigate(['/empleado']);
-      } else {
-        this.mensaje = ' Rol no reconocido';
-      }
-    },
-    error: (err) => {
-      this.mensaje = ' Código incorrecto o expirado';
-      console.error(err);
-    }
-  });
-}
+          // Guardar otros datos
+          localStorage.setItem('usuario', JSON.stringify(res.usuario));
+          localStorage.setItem('rol', res.rol || '');
+          localStorage.setItem('usuario_temp', res.usuario.correo || '');
 
+          // ✅ Redirección por string
+          if (res.rol === 'admin') {
+            this.router.navigate(['/admin']);
+          } else if (res.rol === 'empleado') {
+            this.router.navigate(['/empleado']);
+          } else {
+            this.mensaje = 'Rol no reconocido';
+            console.warn('Rol no reconocido:', res.rol);
+          }
+        },
+        error: (err) => {
+          this.mensaje = 'Código incorrecto o expirado';
+          console.error(err);
+        },
+      });
+  }
 
   contador: number = 0;
   temporizador: any;
@@ -77,7 +83,7 @@ export class VerificarCodigoComponent {
             res.message.includes('reenviado') ||
             res.message.includes('enviado')
           ) {
-            this.iniciarContador(); // 🔄 Inicia el temporizador
+            this.iniciarContador();
           }
         },
         error: (err) => {

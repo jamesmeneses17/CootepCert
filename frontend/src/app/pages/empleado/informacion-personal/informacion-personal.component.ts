@@ -1,34 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; // 👈 agrega ReactiveFormsModule
-import { EmpleadoService } from '../../../services/empleado.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-informacion-personal',
   standalone: true,
-  imports: [ReactiveFormsModule], // 👈 agrégalo aquí
+  imports: [CommonModule],
   templateUrl: './informacion-personal.component.html',
-  styleUrls: ['./informacion-personal.component.css']
 })
 export class InformacionPersonalComponent implements OnInit {
-  form: FormGroup;
-  empleadoId = 1;
-
-  constructor(
-    private fb: FormBuilder,
-    private empleadoService: EmpleadoService
-  ) {
-    this.form = this.fb.group({
-      nombres: [''],
-      apellidos: [''],
-      // otros campos...
-    });
-  }
+  usuario: any = null;
 
   ngOnInit(): void {
-    // Aquí puedes hacer this.empleadoService.getEmpleado(this.empleadoId) si deseas
-  }
+    const datos = localStorage.getItem('usuario');
 
-  guardar() {
-    console.log(this.form.value);
+    if (datos) {
+      try {
+        this.usuario = JSON.parse(datos);
+        console.log('Usuario cargado desde localStorage:', this.usuario);
+      } catch (error) {
+        console.error('❌ Error al parsear usuario:', error);
+      }
+    } else {
+      console.warn('⚠ No hay información del usuario en localStorage.');
+    }
   }
 }

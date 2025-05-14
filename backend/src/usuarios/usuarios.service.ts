@@ -134,7 +134,15 @@ Gracias por utilizar CootepCert.
         },
         { cedula: correo_o_cedula },
       ],
-      relations: ['rol', 'empleado'],
+      relations: [
+        'rol',
+        'empleado',
+        'empleado.genero',
+        'empleado.municipioNacimiento',
+        'empleado.lugarExpedicion',
+        'empleado.cargo',
+        'empleado.tipoContrato',
+      ],
     });
 
     if (!usuario) {
@@ -159,9 +167,17 @@ Gracias por utilizar CootepCert.
       message: 'Código verificado correctamente',
       rol: usuario.rol?.nombre,
       usuario: {
+        correo: usuario.correo,
+        empleadoId: usuario.empleado?.id,
         nombres: usuario.empleado?.nombres,
         apellidos: usuario.empleado?.apellidos,
-        correo: usuario.correo,
+        fecha_nacimiento: usuario.empleado?.fecha_nacimiento,
+        fecha_ingreso: usuario.empleado?.fecha_ingreso,
+        genero: usuario.empleado?.genero,
+        municipioNacimiento: usuario.empleado?.municipioNacimiento,
+        lugarExpedicion: usuario.empleado?.lugarExpedicion,
+        cargo: usuario.empleado?.cargo,
+        tipoContrato: usuario.empleado?.tipoContrato,
       },
     };
   }

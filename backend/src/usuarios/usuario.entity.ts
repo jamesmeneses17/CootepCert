@@ -4,40 +4,39 @@ import { ManyToOne } from 'typeorm';
 import { Empleado } from '../empleados/empleado.entity'; // asegúrate de que exista
 
 
+
 // Definicion de la entidad usuario
+// Al final de tus imports
+import { JoinColumn } from 'typeorm';
+
 @Entity('usuarios')
 export class Usuario {
-  // Clave primaria autoincremental
   @PrimaryGeneratedColumn()
   id: number;
 
-  // Correo de usuario deber ser unico
   @Column({ unique: true })
   correo: string;
 
-  // Cedula de usuario deber ser unico
   @Column({ unique: true })
   cedula: string;
 
-  //Codigo de verificacion para el registro de usuario
   @Column({ nullable: true })
   codigo_verificacion: string;
 
-  // Fecha y hora de expiracion del codigo de verificacion
   @Column({ type: 'timestamp', nullable: true })
   codigo_expira: Date;
-
-  // Campo para controlar el ultimo reenvio del codigo de verificacion
 
   @Column({ type: 'timestamp', nullable: true })
   ultimo_reenvio?: Date;
 
-  //Relacion con la entidad ROL, muchos usuarios pueden tener el mismo rol
   @ManyToOne(() => Rol, (rol) => rol.usuarios)
   rol: Rol;
 
-  //Relacion con la entidad empleado
+  // 👇 Aquí agregas la columna explicitamente
+  @Column({ nullable: true })
+  empleadoId: number;
 
   @ManyToOne(() => Empleado)
-empleado: Empleado;
+  @JoinColumn({ name: 'empleadoId' }) // asegúrate que coincida con el nombre exacto del campo
+  empleado: Empleado;
 }
