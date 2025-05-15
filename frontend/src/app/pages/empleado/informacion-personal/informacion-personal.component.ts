@@ -24,4 +24,32 @@ export class InformacionPersonalComponent implements OnInit {
       console.warn('⚠ No hay información del usuario en localStorage.');
     }
   }
+
+  generarCertificado(): void {
+    const empleadoId = this.usuario?.empleadoId;
+
+    if (!empleadoId) {
+      console.error('ID de empleado no disponible');
+      return;
+    }
+
+const url = `http://localhost:3000/certificados/${empleadoId}/generar`;
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al generar el certificado');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'certificado_laboral.pdf';
+        link.click();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 }
