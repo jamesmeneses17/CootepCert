@@ -2,11 +2,11 @@
     <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md text-center">
       <img src="assets/logo_cootep.png"  alt="Cootep logo" class="w-32 mx-auto mb-4" />
   
-      <h2 class="text-2xl font-bold text-green-800 mb-4">Iniciar sesión en CootepCert</h2>
+      <h2 class="text-2xl font-bold text-green-800 mb-4">Iniciar sesión </h2>
   
       <form [formGroup]="loginForm" (ngSubmit)="enviarCodigo()" class="space-y-4">
         <div class="text-left">
-          <label for="identificador" class="block font-semibold mb-1">Cédula o Correo</label>
+          <label for="identificador" class="block font-semibold mb-1">Usuario</label>
           <input
             id="identificador"
             type="text"
@@ -21,7 +21,7 @@
           [disabled]="loginForm.invalid"
           class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
         >
-          Enviar Código
+          Ingresar
         </button>
       </form>
   

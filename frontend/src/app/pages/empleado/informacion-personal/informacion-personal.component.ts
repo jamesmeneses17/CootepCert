@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 })
 export class InformacionPersonalComponent implements OnInit {
   usuario: any = null;
+  sidebarAbierto: boolean = true; // inicialmente visible
+
 
   ngOnInit(): void {
     const datos = localStorage.getItem('usuario');
@@ -24,6 +26,9 @@ export class InformacionPersonalComponent implements OnInit {
       console.warn('⚠ No hay información del usuario en localStorage.');
     }
   }
+  toggleSidebar(): void {
+  this.sidebarAbierto = !this.sidebarAbierto;
+}
 
   generarCertificado(): void {
     const empleadoId = this.usuario?.empleadoId;
@@ -52,4 +57,5 @@ const url = `http://localhost:3000/certificados/${empleadoId}/generar`;
         console.error('Error:', error);
       });
   }
+  
 }
