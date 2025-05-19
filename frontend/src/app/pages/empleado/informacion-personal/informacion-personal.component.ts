@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-informacion-personal',
@@ -10,6 +12,9 @@ import { CommonModule } from '@angular/common';
 export class InformacionPersonalComponent implements OnInit {
   usuario: any = null;
   sidebarAbierto: boolean = true; // inicialmente visible
+  public mostrarMenu: boolean = false;
+
+    constructor(private router: Router) {}
 
 
   ngOnInit(): void {
@@ -27,8 +32,8 @@ export class InformacionPersonalComponent implements OnInit {
     }
   }
   toggleSidebar(): void {
-  this.sidebarAbierto = !this.sidebarAbierto;
-}
+    this.sidebarAbierto = !this.sidebarAbierto;
+  }
 
   generarCertificado(): void {
     const empleadoId = this.usuario?.empleadoId;
@@ -38,24 +43,28 @@ export class InformacionPersonalComponent implements OnInit {
       return;
     }
 
-const url = `http://localhost:3000/certificados/${empleadoId}/generar`;
+    const url = `http://localhost:3000/certificados/${empleadoId}/generar`;
 
     fetch(url)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Error al generar el certificado');
         }
         return response.blob();
       })
-      .then(blob => {
+      .then((blob) => {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'certificado_laboral.pdf';
         link.click();
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error:', error);
       });
   }
-  
+  // Método para cerrar sesión
+  cerrarSesion(): void {
+    localStorage.removeItem('usuario'); // opcional: borra sesión local
+    this.router.navigate(['/']); // redirige al inicio (localhost:4200)
+  }
 }

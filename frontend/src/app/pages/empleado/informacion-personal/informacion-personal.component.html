@@ -1,14 +1,50 @@
 <!-- Layout general con sidebar y banner -->
 <div class="flex flex-col min-h-screen">
-  <!-- Banner superior institucional con logo y botón de menú -->
-  <div class="bg-white shadow px-6 py-4 flex items-center justify-start relative transition-all duration-300 ml-0" [ngClass]="{ 'ml-64': sidebarAbierto }">
-    <button
-      class="mr-4 bg-white text-gray-700 p-2 rounded-md shadow-md z-50"
-      (click)="toggleSidebar()"
-    >
-      <i class="fa-solid" [ngClass]="sidebarAbierto ? 'fa-xmark' : 'fa-bars'"></i>
-    </button>
-    <img src="assets/logo_cootep.png" alt="Logo Cootep" class="h-10" />
+  <!-- Banner superior institucional con logo, botón de menú y cerrar sesión -->
+  <div
+    class="bg-white shadow px-6 py-4 flex items-center justify-between relative transition-all duration-300"
+    [ngClass]="{ 'ml-64': sidebarAbierto }"
+  >
+    <div class="flex items-center gap-4">
+      <button
+        class="bg-white text-gray-700 p-2 rounded-md shadow-md z-50"
+        (click)="toggleSidebar()"
+      >
+        <i
+          class="fa-solid"
+          [ngClass]="sidebarAbierto ? 'fa-xmark' : 'fa-bars'"
+        ></i>
+      </button>
+      <img src="assets/logo_cootep.png" alt="Logo Cootep" class="h-10" />
+    </div>
+    <div class="relative" (clickOutside)="mostrarMenu = false">
+      <button (click)="mostrarMenu = !mostrarMenu" class="text-gray-700 p-1">
+        <i class="fa-solid fa-right-from-bracket text-base"></i>
+      </button>
+      <div
+        *ngIf="mostrarMenu"
+        class="absolute right-0 mt-2 w-64 bg-white border rounded shadow-md z-50 text-sm"
+      >
+        <div class="px-4 py-2 border-b font-semibold text-center">
+          Información
+        </div>
+        <div class="px-4 py-2 flex items-center gap-2 border-b">
+          <i class="fa-solid fa-user"></i>
+          <span class="text-gray-700 text-xs">Usuario</span>
+          <span class="ml-auto text-gray-600 text-xs font-semibold"
+            >{{ usuario?.nombres }} {{ usuario?.apellidos }}</span
+          >
+        </div>
+
+        <div
+          class="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-100"
+          (click)="cerrarSesion()"
+        >
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Cerrar Sesión</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="flex flex-1 overflow-hidden">
@@ -21,57 +57,139 @@
     </div>
 
     <!-- Contenido principal -->
-    <div class="flex-1 ml-0 overflow-y-auto transition-all duration-300" [ngClass]="{ 'ml-64': sidebarAbierto }">
-
+    <div
+      class="flex-1 ml-0 overflow-y-auto transition-all duration-300"
+      [ngClass]="{ 'ml-64': sidebarAbierto }"
+    >
       <!-- Banner de bienvenida con ancho limitado -->
-      <div class="bg-cyan-600 text-white px-6 py-4 text-center font-semibold max-w-5xl mx-auto rounded-md mt-6">
-        Bienvenido(a) {{ usuario?.nombres | uppercase }} {{ usuario?.apellidos | uppercase }}. Verifique que toda su información de datos básicos y ubicación estén actualizados
+      <div
+        class="bg-cyan-600 text-white px-6 py-4 text-center font-semibold max-w-5xl mx-auto rounded-md mt-6"
+      >
+        Bienvenido(a) {{ usuario?.nombres | uppercase }}
+        {{ usuario?.apellidos | uppercase }}. Verifique que toda su información
+        de datos básicos y ubicación estén actualizados
       </div>
 
       <!-- Sección de información personal -->
       <div class="max-w-6xl mx-auto px-6 py-10">
         <div class="bg-white border rounded-xl shadow-md p-6">
-          <h2 class="text-xl font-bold text-white bg-blue-900 px-4 py-2 rounded-t-md">Mis Datos</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+          <h2
+            class="text-xl font-bold text-white bg-blue-900 px-4 py-2 rounded-t-md"
+          >
+            Mis Datos
+          </h2>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
+          >
             <div>
-              <label class="block text-sm font-medium text-gray-700">Nombres</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.nombres" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Nombres</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.nombres"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Apellidos</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.apellidos" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Apellidos</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.apellidos"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Correo</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.correo" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Correo</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.correo"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.fecha_nacimiento" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Fecha de Nacimiento</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.fecha_nacimiento"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Fecha de Ingreso</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.fecha_ingreso" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Fecha de Ingreso</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.fecha_ingreso"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Género</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.genero?.nombre" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Género</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.genero?.nombre"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Municipio de Nacimiento</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.municipioNacimiento?.nombre" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Municipio de Nacimiento</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.municipioNacimiento?.nombre"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Lugar de Expedición</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.lugarExpedicion?.nombre" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Lugar de Expedición</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.lugarExpedicion?.nombre"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Cargo</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.cargo?.nombre" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Cargo</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.cargo?.nombre"
+                readonly
+              />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Tipo de Contrato</label>
-              <input type="text" class="mt-1 block w-full bg-gray-100 rounded-md p-2" [value]="usuario?.tipoContrato?.nombre" readonly />
+              <label class="block text-sm font-medium text-gray-700"
+                >Tipo de Contrato</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
+                [value]="usuario?.tipoContrato?.nombre"
+                readonly
+              />
             </div>
           </div>
         </div>
@@ -91,9 +209,13 @@
   </div>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-gray-200 px-4 py-3 text-sm text-gray-600 flex justify-between items-center transition-all duration-300 ml-0" [ngClass]="{ 'ml-64': sidebarAbierto }">
+  <footer
+    class="bg-white border-t border-gray-200 px-4 py-3 text-sm text-gray-600 flex justify-between items-center transition-all duration-300 ml-0"
+    [ngClass]="{ 'ml-64': sidebarAbierto }"
+  >
     <div>
-      &copy; 2025 <span class="text-blue-600 font-semibold">CootepCert</span>. Todos los derechos reservados.
+      &copy; 2025 <span class="text-blue-600 font-semibold">CootepCert</span>.
+      Todos los derechos reservados.
     </div>
     <div>
       <span class="font-semibold text-gray-800">Versión 1.0.0</span>
