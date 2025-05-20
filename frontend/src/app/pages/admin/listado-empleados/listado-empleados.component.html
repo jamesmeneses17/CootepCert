@@ -1,19 +1,29 @@
 <h2>Listado de Empleados</h2>
+
+<input
+  type="text"
+  [(ngModel)]="filtro"
+  placeholder="Buscar por cédula o nombre"
+  class="border px-4 py-2 mb-4 w-full"
+/>
+
 <table>
   <thead>
     <tr>
       <th>Nombres</th>
       <th>Apellidos</th>
-      <th>Correo</th> 
+      <th>Correo</th>
+      <th>Cédula</th>
       <th>Cargo</th>
       <th>Fecha de Ingreso</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let empleado of empleados">
+    <tr *ngFor="let empleado of empleadosFiltrados">
       <td>{{ empleado.nombres }}</td>
       <td>{{ empleado.apellidos }}</td>
-      <td>{{ empleado.correo }}</td> 
+      <td>{{ empleado.correo }}</td>
+      <td>{{ empleado.cedula }}</td>
       <td>{{ empleado.cargo?.nombre }}</td>
       <td>{{ empleado.fecha_ingreso }}</td>
     </tr>
