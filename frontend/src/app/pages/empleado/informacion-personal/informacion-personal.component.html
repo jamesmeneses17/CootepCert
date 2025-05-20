@@ -1,9 +1,16 @@
 <!-- Layout general con sidebar y banner -->
 <div class="flex flex-col min-h-screen">
+  <!-- Overlay para móviles -->
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 md:hidden"
+    *ngIf="sidebarAbierto"
+    (click)="toggleSidebar()"
+  ></div>
+
   <!-- Banner superior institucional con logo, botón de menú y cerrar sesión -->
   <div
     class="bg-white shadow px-6 py-4 flex items-center justify-between relative transition-all duration-300"
-    [ngClass]="{ 'ml-64': sidebarAbierto }"
+    [ngClass]="{ 'md:ml-64': sidebarAbierto }"
   >
     <div class="flex items-center gap-4">
       <button
@@ -50,7 +57,7 @@
   <div class="flex flex-1 overflow-hidden">
     <!-- Sidebar -->
     <div
-      class="fixed top-0 left-0 w-64 h-full bg-gray-800 text-white p-4 space-y-4 z-40 transform transition-transform duration-300"
+      class="fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white p-4 space-y-4 z-50 transform transition-transform duration-300"
       [ngClass]="{ '-translate-x-full': !sidebarAbierto }"
     >
       <p class="text-sm text-gray-300">Panel de navegación</p>
@@ -59,7 +66,7 @@
     <!-- Contenido principal -->
     <div
       class="flex-1 ml-0 overflow-y-auto transition-all duration-300"
-      [ngClass]="{ 'ml-64': sidebarAbierto }"
+      [ngClass]="{ 'md:ml-64': sidebarAbierto }"
     >
       <!-- Banner de bienvenida con ancho limitado -->
       <div
@@ -211,7 +218,7 @@
   <!-- Footer -->
   <footer
     class="bg-white border-t border-gray-200 px-4 py-3 text-sm text-gray-600 flex justify-between items-center transition-all duration-300 ml-0"
-    [ngClass]="{ 'ml-64': sidebarAbierto }"
+    [ngClass]="{ 'md:ml-64': sidebarAbierto }"
   >
     <div>
       &copy; 2025 <span class="text-blue-600 font-semibold">CootepCert</span>.
