@@ -1,77 +1,32 @@
 <!-- Layout general con sidebar y banner -->
 <div class="flex flex-col min-h-screen">
   <!-- Overlay para móviles -->
-  <div
-    class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 md:hidden"
-    *ngIf="sidebarAbierto"
-    (click)="toggleSidebar()"
-  ></div>
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 md:hidden"
+    *ngIf="sidebarAbierto" (click)="toggleSidebar()"></div>
 
   <!-- Banner superior institucional con logo, botón de menú y cerrar sesión -->
-  <div
-    class="bg-white shadow px-6 py-4 flex items-center justify-between relative transition-all duration-300"
-    [ngClass]="{ 'md:ml-64': sidebarAbierto }"
-  >
+  <div class="bg-white shadow px-6 py-4 flex items-center justify-between relative transition-all duration-300"
+    [ngClass]="{ 'md:ml-64': sidebarAbierto }">
     <div class="flex items-center gap-4">
-      <button
-        class="bg-white text-gray-700 p-2 rounded-md shadow-md z-50"
-        (click)="toggleSidebar()"
-      >
-        <i
-          class="fa-solid"
-          [ngClass]="sidebarAbierto ? 'fa-xmark' : 'fa-bars'"
-        ></i>
+      <button class="bg-white text-gray-700 p-2 rounded-md shadow-md z-50" (click)="toggleSidebar()">
+        <i class="fa-solid" [ngClass]="sidebarAbierto ? 'fa-xmark' : 'fa-bars'"></i>
       </button>
       <img src="assets/logo_cootep.png" alt="Logo Cootep" class="h-10" />
     </div>
-    <div class="relative" (clickOutside)="mostrarMenu = false">
-      <button (click)="mostrarMenu = !mostrarMenu" class="text-gray-700 p-1">
-        <i class="fa-solid fa-right-from-bracket text-base"></i>
-      </button>
-      <div
-        *ngIf="mostrarMenu"
-        class="absolute right-0 mt-2 w-64 bg-white border rounded shadow-md z-50 text-sm"
-      >
-        <div class="px-4 py-2 border-b font-semibold text-center">
-          Información
-        </div>
-        <div class="px-4 py-2 flex items-center gap-2 border-b">
-          <i class="fa-solid fa-user"></i>
-          <span class="text-gray-700 text-xs">Usuario</span>
-          <span class="ml-auto text-gray-600 text-xs font-semibold"
-            >{{ usuario?.nombres }} {{ usuario?.apellidos }}</span
-          >
-        </div>
+    <app-menu-usuario [nombres]="usuario?.nombres" [apellidos]="usuario?.apellidos"
+      (cerrarSesion)="cerrarSesion()"></app-menu-usuario>
 
-        <div
-          class="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-100"
-          (click)="cerrarSesion()"
-        >
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Cerrar Sesión</span>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="flex flex-1 overflow-hidden">
     <!-- Sidebar -->
-    <div
-      class="fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white p-4 space-y-4 z-50 transform transition-transform duration-300"
-      [ngClass]="{ '-translate-x-full': !sidebarAbierto }"
-    >
-      <p class="text-sm text-gray-300">Panel de navegación</p>
-    </div>
+    <app-sidebar [items]="menuItems" [abierto]="sidebarAbierto"></app-sidebar>
+
 
     <!-- Contenido principal -->
-    <div
-      class="flex-1 ml-0 overflow-y-auto transition-all duration-300"
-      [ngClass]="{ 'md:ml-64': sidebarAbierto }"
-    >
+    <div class="flex-1 ml-0 overflow-y-auto transition-all duration-300" [ngClass]="{ 'md:ml-64': sidebarAbierto }">
       <!-- Banner de bienvenida con ancho limitado -->
-      <div
-        class="bg-cyan-600 text-white px-6 py-4 text-center font-semibold max-w-5xl mx-auto rounded-md mt-6"
-      >
+      <div class="bg-cyan-600 text-white px-6 py-4 text-center font-semibold max-w-5xl mx-auto rounded-md mt-6">
         Bienvenido(a) {{ usuario?.nombres | uppercase }}
         {{ usuario?.apellidos | uppercase }}. Verifique que toda su información
         de datos básicos y ubicación estén actualizados
@@ -80,133 +35,28 @@
       <!-- Sección de información personal -->
       <div class="max-w-6xl mx-auto px-6 py-10">
         <div class="bg-white border rounded-xl shadow-md p-6">
-          <h2
-            class="text-xl font-bold text-white bg-blue-900 px-4 py-2 rounded-t-md"
-          >
+          <h2 class="text-xl font-bold text-white bg-blue-900 px-4 py-2 rounded-t-md">
             Mis Datos
           </h2>
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
-          >
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Nombres</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.nombres"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Apellidos</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.apellidos"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Correo</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.correo"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Fecha de Nacimiento</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.fecha_nacimiento"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Fecha de Ingreso</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.fecha_ingreso"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Género</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.genero?.nombre"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Municipio de Nacimiento</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.municipioNacimiento?.nombre"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Lugar de Expedición</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.lugarExpedicion?.nombre"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Cargo</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.cargo?.nombre"
-                readonly
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Tipo de Contrato</label
-              >
-              <input
-                type="text"
-                class="mt-1 block w-full bg-gray-100 rounded-md p-2"
-                [value]="usuario?.tipoContrato?.nombre"
-                readonly
-              />
-            </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            <app-dato-usuario label="Nombres" [value]="usuario?.nombres"></app-dato-usuario>
+            <app-dato-usuario label="Apellidos" [value]="usuario?.apellidos"></app-dato-usuario>
+            <app-dato-usuario label="Correo" [value]="usuario?.correo"></app-dato-usuario>
+            <app-dato-usuario label="Fecha de Nacimiento" [value]="usuario?.fecha_nacimiento"></app-dato-usuario>
+            <app-dato-usuario label="Fecha de Ingreso" [value]="usuario?.fecha_ingreso"></app-dato-usuario>
+            <app-dato-usuario label="Género" [value]="usuario?.genero?.nombre"></app-dato-usuario>
+            <app-dato-usuario label="Municipio de Nacimiento"
+              [value]="usuario?.municipioNacimiento?.nombre"></app-dato-usuario>
+            <app-dato-usuario label="Lugar de Expedición" [value]="usuario?.lugarExpedicion?.nombre"></app-dato-usuario>
+            <app-dato-usuario label="Cargo" [value]="usuario?.cargo?.nombre"></app-dato-usuario>
+            <app-dato-usuario label="Tipo de Contrato" [value]="usuario?.tipoContrato?.nombre"></app-dato-usuario>
           </div>
         </div>
 
         <!-- Botón de certificado -->
         <div class="flex justify-center mt-10">
-          <button
-            (click)="generarCertificado()"
-            class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-300"
-          >
+          <button (click)="generarCertificado()"
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-300">
             <i class="fa-solid fa-file-pdf mr-2"></i>
             Descargar Certificado Laboral
           </button>
@@ -216,16 +66,6 @@
   </div>
 
   <!-- Footer -->
-  <footer
-    class="bg-white border-t border-gray-200 px-4 py-3 text-sm text-gray-600 flex justify-between items-center transition-all duration-300 ml-0"
-    [ngClass]="{ 'md:ml-64': sidebarAbierto }"
-  >
-    <div>
-      &copy; 2025 <span class="text-blue-600 font-semibold">CootepCert</span>.
-      Todos los derechos reservados.
-    </div>
-    <div>
-      <span class="font-semibold text-gray-800">Versión 1.0.0</span>
-    </div>
-  </footer>
+  <app-footer [sidebarAbierto]="sidebarAbierto"></app-footer>
+
 </div>

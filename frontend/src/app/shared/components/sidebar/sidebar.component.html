@@ -1,0 +1,16 @@
+<div
+  class="fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white p-4 space-y-4 z-50 transform transition-transform duration-300"
+  [ngClass]="{ '-translate-x-full': !abierto, 'md:translate-x-0': true }"
+>
+  <p class="text-sm text-gray-300 mb-4">Panel de navegación</p>
+  <ul class="space-y-2">
+    <li
+      *ngFor="let item of items"
+      class="cursor-pointer flex items-center gap-3 hover:bg-gray-700 px-3 py-2 rounded"
+      (click)="item.accion?.()"
+    >
+      <i class="fa-solid" [ngClass]="item.icono"></i>
+      <span>{{ item.texto }}</span>
+    </li>
+  </ul>
+</div>

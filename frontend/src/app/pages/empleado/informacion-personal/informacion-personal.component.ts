@@ -1,12 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { DatoUsuarioComponent } from '../../../shared/components/dato-usuario/dato-usuario.component';
+import { MenuUsuarioComponent } from '../../../shared/components/menu-usuario/menu-usuario.component';
+import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
+import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-informacion-personal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DatoUsuarioComponent,
+    MenuUsuarioComponent,
+    FooterComponent,
+    SidebarComponent,
+  ],
   templateUrl: './informacion-personal.component.html',
 })
 export class InformacionPersonalComponent implements OnInit {
@@ -14,8 +23,7 @@ export class InformacionPersonalComponent implements OnInit {
   sidebarAbierto: boolean = true; // inicialmente visible
   public mostrarMenu: boolean = false;
 
-    constructor(private router: Router) {}
-
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     const datos = localStorage.getItem('usuario');
@@ -66,5 +74,24 @@ export class InformacionPersonalComponent implements OnInit {
   cerrarSesion(): void {
     localStorage.removeItem('usuario'); // opcional: borra sesión local
     this.router.navigate(['/']); // redirige al inicio (localhost:4200)
+  }
+
+  menuItems = [
+    { texto: 'Inicio', icono: 'fa-house', accion: () => this.irA('/inicio') },
+    {
+      texto: 'Información Personal',
+      icono: 'fa-user',
+      accion: () => this.irA('/empleado/informacion-personal'),
+    },
+    {
+      texto: 'Certificados',
+      icono: 'fa-file',
+      accion: () => this.irA('/empleado/certificados'),
+    },
+  ];
+
+  irA(ruta: string) {
+    // Router puede inyectarse si no lo has hecho
+    this.router.navigate([ruta]);
   }
 }
