@@ -11,14 +11,21 @@ export class EmpleadoService {
 
   constructor(private http: HttpClient) {}
 
-  // Método unificado para obtener un empleado por ID
- findOne(id: number): Observable<Empleado> {
-  return this.http.get<Empleado>(`http://localhost:3000/empleados/${id}`);
-}
+  // Obtener todos los empleados
+  obtenerEmpleados(): Observable<Empleado[]> {
+    return this.http.get<Empleado[]>(this.apiUrl);
+  }
 
+  // Obtener un empleado por ID
+  findOne(id: number): Observable<Empleado> {
+    return this.http.get<Empleado>(`${this.apiUrl}/${id}`);
+  }
 
   // Actualizar un empleado por ID
   update(id: number, data: Partial<Empleado>): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, data);
   }
+
+  
+  
 }

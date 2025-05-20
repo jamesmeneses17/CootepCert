@@ -4,10 +4,12 @@ import { VerificarCodigoComponent } from './pages/verificar-codigo/verificar-cod
 import { EmpleadoComponent } from './pages/empleado/empleado.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { InformacionPersonalComponent } from './pages/empleado/informacion-personal/informacion-personal.component';
+import { ListadoEmpleadosComponent } from './pages/admin/listado-empleados/listado-empleados.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'verificar', component: VerificarCodigoComponent },
+
   {
     path: 'empleado',
     component: EmpleadoComponent,
@@ -16,5 +18,13 @@ export const routes: Routes = [
       { path: 'informacion-personal', component: InformacionPersonalComponent },
     ],
   },
-  { path: 'admin', component: AdminComponent },
+
+  {
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+      { path: '', redirectTo: 'empleados', pathMatch: 'full' },
+      { path: 'empleados', component: ListadoEmpleadosComponent },
+    ],
+  },
 ];

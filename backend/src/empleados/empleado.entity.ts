@@ -58,4 +58,6 @@ export class Empleado {
 
   @OneToMany(() => Certificado, (certificado) => certificado.empleado)
   certificados: Certificado[];
+
+  
 }

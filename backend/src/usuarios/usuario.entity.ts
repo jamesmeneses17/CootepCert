@@ -5,6 +5,7 @@ import { Empleado } from '../empleados/empleado.entity'; // asegúrate de que ex
 
 
 
+
 // Definicion de la entidad usuario
 // Al final de tus imports
 import { JoinColumn } from 'typeorm';
