@@ -76,22 +76,5 @@ export class InformacionPersonalComponent implements OnInit {
     this.router.navigate(['/']); // redirige al inicio (localhost:4200)
   }
 
-  menuItems = [
-    { texto: 'Inicio', icono: 'fa-house', accion: () => this.irA('/inicio') },
-    {
-      texto: 'Información Personal',
-      icono: 'fa-user',
-      accion: () => this.irA('/empleado/informacion-personal'),
-    },
-    {
-      texto: 'Certificados',
-      icono: 'fa-file',
-      accion: () => this.irA('/empleado/certificados'),
-    },
-  ];
-
-  irA(ruta: string) {
-    // Router puede inyectarse si no lo has hecho
-    this.router.navigate([ruta]);
-  }
+  
 }
