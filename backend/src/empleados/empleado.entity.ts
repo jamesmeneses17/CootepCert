@@ -13,6 +13,8 @@ import { Cargo } from '../cargos/cargo.entity';
 import { TipoContrato } from '../tipos-contrato/tipo-contrato.entity';
 import { Certificado } from '../certificados/certificado.entity';
 import { Usuario } from '../usuarios/usuario.entity';
+import { HistorialEmpleado } from '../historial-empleado/historial-empleado.entity';
+
 
 @Entity('empleados')
 export class Empleado {
@@ -60,5 +62,13 @@ export class Empleado {
   // ✅ Relación con Usuario (necesaria para acceder a `empleado.usuario.correo`)
   @OneToOne(() => Usuario, (usuario) => usuario.empleado)
   usuario: Usuario;
+
+  @OneToMany(() => HistorialEmpleado, (historial) => historial.empleado)
+historial: HistorialEmpleado[];
+
+@Column('decimal', { precision: 10, scale: 2 })
+salario: number;
+
+
   
 }

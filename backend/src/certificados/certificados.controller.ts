@@ -11,6 +11,7 @@ import {
 import { Response } from 'express';
 import { CertificadosService } from './certificados.service';
 import { Certificado } from './certificado.entity';
+import { GenerarCertificadoDto } from './generar-certificado.dto';
 
 @Controller('certificados')
 export class CertificadosController {
@@ -41,21 +42,24 @@ export class CertificadosController {
     return this.certificadosService.remove(+id);
   }
 
-  // Endpoint para generar y descargar el PDF del certificado
-
-  @Get(':id/generar')
-  async generarPdf(@Param('id') id: string, @Res() res: Response) {
-    // Genera el PDF y lo guarda en un buffer
-    const buffer = await this.certificadosService.generarPdfBuffer(+id);
-
-    //Configura los headers para la descarga del PDF
-
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader(
-      'Content-Disposition',
-      'attachment; filename=certificado.pdf',
+  // ✅ Único endpoint para generar certificado (salario, funciones o historial)
+  @Post(':id/generar')
+  async generarCertificado(
+    @Param('id') id: number,
+    @Body() body: GenerarCertificadoDto,
+    @Res() res: Response
+  ) {
+    const buffer = await this.certificadosService.generarPdfBufferPorTipo(
+      id,
+      body.tipo,
+      { fechaInicio: body.fechaInicio, fechaFin: body.fechaFin }
     );
-    // Envía el buffer como respuesta
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=certificado_laboral.pdf',
+    });
+
     res.send(buffer);
   }
 }
