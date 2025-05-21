@@ -5,6 +5,7 @@ import { EmpleadoComponent } from './pages/empleado/empleado.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { InformacionPersonalComponent } from './pages/empleado/informacion-personal/informacion-personal.component';
 import { ListadoEmpleadosComponent } from './pages/admin/listado-empleados/listado-empleados.component';
+import { EditarEmpleadoComponent } from './pages/admin/editar-empleado/editar-empleado.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -19,12 +20,14 @@ export const routes: Routes = [
     ],
   },
 
-  {
-    path: 'admin',
-    component: AdminComponent,
-    children: [
-      { path: '', redirectTo: 'empleados', pathMatch: 'full' },
-      { path: 'empleados', component: ListadoEmpleadosComponent },
-    ],
-  },
+ {
+  path: 'admin',
+  component: AdminComponent,
+  children: [
+    { path: '', redirectTo: 'empleados', pathMatch: 'full' }, // ✅ este faltaba
+    { path: 'empleados', component: ListadoEmpleadosComponent },
+    { path: 'empleados/editar/:id', component: EditarEmpleadoComponent },
+  ],
+},
+
 ];

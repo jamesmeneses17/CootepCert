@@ -2,56 +2,36 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Empleado } from './empleado.entity';
-import { Usuario } from '../usuarios/usuario.entity';
-import { DataSource } from 'typeorm';
-
-
-
+import { Usuario } from '../usuarios/usuario.entity'; // 👈 Asegúrate de importar esto
 
 @Injectable()
 export class EmpleadosService {
   constructor(
     @InjectRepository(Empleado)
     private readonly empleadoRepository: Repository<Empleado>,
-      private readonly dataSource: DataSource 
 
+    @InjectRepository(Usuario) // 👈 Inyectar repositorio de Usuario
+    private readonly usuarioRepository: Repository<Usuario>,
   ) {}
-
-  // Crea un nuevo empleado a partir de los datos recibidos
 
   create(data: Partial<Empleado>) {
     const nuevoEmpleado = this.empleadoRepository.create(data);
     return this.empleadoRepository.save(nuevoEmpleado);
   }
 
-  // Retorna todos los empleados de la base de datos
+  findAll() {
+    return this.empleadoRepository.find({
+      relations: [
+        'genero',
+        'municipioNacimiento',
+        'lugarExpedicion',
+        'cargo',
+        'tipoContrato',
+        'usuario'
+      ],
+    });
+  }
 
-async findAll() {
-  const empleados = await this.empleadoRepository.find({
-    relations: [
-      'genero',
-      'municipioNacimiento',
-      'lugarExpedicion',
-      'cargo',
-      'tipoContrato',
-    ],
-  });
-
-  const usuarios = await this.dataSource.getRepository(Usuario).find({
-    select: ['correo', 'empleadoId'],
-  });
-
-  return empleados.map((empleado) => {
-    const usuario = usuarios.find((u) => u.empleadoId === empleado.id);
-    return {
-      ...empleado,
-      correo: usuario?.correo ?? null,
-    };
-  });
-}
-
-
-  // Busca un empleado por su id y retorna el empleado encontrado
   findOne(id: number) {
     return this.empleadoRepository.findOne({
       where: { id },
@@ -61,17 +41,30 @@ async findAll() {
         'lugarExpedicion',
         'cargo',
         'tipoContrato',
+        'usuario'
       ],
     });
   }
 
-  // busca un empleado por su id y retorna el empleado encontrado
+  async update(id: number, data: Partial<Empleado>) {
+    const empleado = await this.empleadoRepository.findOne({
+      where: { id },
+      relations: ['usuario'],
+    });
 
-  update(id: number, data: Partial<Empleado>) {
-    return this.empleadoRepository.update(id, data);
+    if (!empleado) throw new Error('Empleado no encontrado');
+
+    // Actualiza campos del empleado
+    Object.assign(empleado, data);
+
+    // ✅ Actualiza correo si viene en el payload
+    if (data.usuario?.correo && empleado.usuario) {
+      empleado.usuario.correo = data.usuario.correo;
+      await this.usuarioRepository.save(empleado.usuario); // 👈 importante
+    }
+
+    return this.empleadoRepository.save(empleado);
   }
-
-  //Eliminar un empleado por su id y retorna el empleado eliminado
 
   async remove(id: number) {
     const empleado = await this.empleadoRepository.findOne({ where: { id } });

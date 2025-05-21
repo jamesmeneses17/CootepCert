@@ -7,7 +7,7 @@
   class="border px-4 py-2 mb-4 w-full"
 />
 
-<table>
+<table class="w-full border">
   <thead>
     <tr>
       <th>Nombres</th>
@@ -16,6 +16,7 @@
       <th>Cédula</th>
       <th>Cargo</th>
       <th>Fecha de Ingreso</th>
+      <th>Acciones</th> <!-- ✅ Nueva columna -->
     </tr>
   </thead>
   <tbody>
@@ -26,6 +27,14 @@
       <td>{{ empleado.cedula }}</td>
       <td>{{ empleado.cargo?.nombre }}</td>
       <td>{{ empleado.fecha_ingreso }}</td>
+      <td>
+        <a
+          [routerLink]="['/admin/empleados/editar', empleado.id]"
+          class="text-white bg-yellow-500 px-3 py-1 rounded inline-block hover:bg-yellow-600"
+        >
+          ✏️
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>

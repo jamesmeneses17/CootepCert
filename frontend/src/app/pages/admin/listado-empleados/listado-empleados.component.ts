@@ -3,12 +3,13 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Empleado } from 'src/app/models/empleado.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-listado-empleados',
   templateUrl: './listado-empleados.component.html',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,RouterModule],
 })
 export class ListadoEmpleadosComponent implements OnInit {
   empleados: Empleado[] = [];

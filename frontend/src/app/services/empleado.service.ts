@@ -7,25 +7,39 @@ import { Empleado } from 'src/app/models/empleado.model';
   providedIn: 'root'
 })
 export class EmpleadoService {
-  private apiUrl = 'http://localhost:3000/empleados';
+  private baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
   // Obtener todos los empleados
   obtenerEmpleados(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(this.apiUrl);
+    return this.http.get<Empleado[]>(`${this.baseUrl}/empleados`);
   }
 
   // Obtener un empleado por ID
-  findOne(id: number): Observable<Empleado> {
-    return this.http.get<Empleado>(`${this.apiUrl}/${id}`);
+  getEmpleadoById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/empleados/${id}`);
   }
 
-  // Actualizar un empleado por ID
-  update(id: number, data: Partial<Empleado>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  // Actualizar empleado
+  actualizarEmpleado(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/empleados/${id}`, data);
   }
 
-  
-  
+  // Obtener listas auxiliares
+  getGeneros(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/generos`);
+  }
+
+  getMunicipios(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/municipios`);
+  }
+
+  getCargos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/cargos`);
+  }
+
+  getTiposContrato(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/tipos-contrato`);
+  }
 }

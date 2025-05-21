@@ -1,0 +1,75 @@
+<h2 class="text-2xl font-bold mb-4">Editar Empleado</h2>
+
+<form *ngIf="empleado" (ngSubmit)="guardar()" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div>
+    <label class="block">Nombres</label>
+    <input [(ngModel)]="empleado.nombres" name="nombres" class="border w-full p-2" />
+  </div>
+
+  <div>
+    <label class="block">Apellidos</label>
+    <input [(ngModel)]="empleado.apellidos" name="apellidos" class="border w-full p-2" />
+  </div>
+
+  <div>
+    <label class="block">Correo</label>
+    <input [(ngModel)]="empleado.usuario.correo" name="correo" class="border w-full p-2" />
+  </div>
+
+  <div>
+    <label class="block">Fecha de Nacimiento</label>
+    <input type="date" [(ngModel)]="empleado.fecha_nacimiento" name="fecha_nacimiento" class="border w-full p-2" />
+  </div>
+
+  <div>
+    <label class="block">Fecha de Ingreso</label>
+    <input type="date" [(ngModel)]="empleado.fecha_ingreso" name="fecha_ingreso" class="border w-full p-2" />
+  </div>
+
+  <div>
+    <label class="block">Género</label>
+    <select [(ngModel)]="empleado.genero.id" name="genero" class="border w-full p-2">
+      <option *ngFor="let g of generos" [value]="g.id">{{ g.nombre }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block">Municipio de Nacimiento</label>
+    <select [(ngModel)]="empleado.municipioNacimiento.id" name="municipioNacimiento" class="border w-full p-2">
+      <option *ngFor="let m of municipios" [value]="m.id">
+        {{ m.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block">Lugar de Expedición</label>
+    <select [(ngModel)]="empleado.lugarExpedicion.id" name="lugarExpedicion" class="border w-full p-2">
+      <option *ngFor="let m of municipios" [value]="m.id">
+        {{ m.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block">Cargo</label>
+    <select [(ngModel)]="empleado.cargo.id" name="cargo" class="border w-full p-2">
+      <option *ngFor="let c of cargos" [value]="c.id">{{ c.nombre }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block">Tipo de Contrato</label>
+    <select [(ngModel)]="empleado.tipoContrato.id" name="tipoContrato" class="border w-full p-2">
+      <option *ngFor="let t of tiposContrato" [value]="t.id">
+        {{ t.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-span-full">
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-4">
+      Guardar Cambios
+    </button>
+  </div>
+</form>
