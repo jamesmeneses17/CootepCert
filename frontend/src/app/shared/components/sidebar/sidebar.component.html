@@ -4,54 +4,26 @@
 >
   <!-- Logo -->
   <div class="flex items-center justify-center h-24 border-b border-gray-600">
-    <img src="assets/logo_cootep.png" alt="Logo Cootep" class="h-12" />
+    <img src="assets/logo_cootep.png" alt="Logo Cootep" class="h-14" />
   </div>
 
   <!-- Panel de navegación -->
-  <div class="p-4">
-    <p class="text-sm text-gray-400 mb-4">Panel de navegación</p>
+  <div class="p-4 space-y-4">
+    <p class="text-sm text-gray-400 mb-2">Panel de navegación</p>
 
-    <!-- Enlace: Mis Datos -->
-    <a
-      routerLink="/empleado/informacion-personal"
-      routerLinkActive="bg-gray-700"
-      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"
-    >
-      <i class="fa-solid fa-user"></i>
-      <span>Mis Datos</span>
-    </a>
-
-    <!-- Enlace: Solicitar Certificado -->
-    <a
-      routerLink="/empleado/solicitar-certificado"
-      routerLinkActive="bg-gray-700"
-      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition mt-2"
-    >
-      <i class="fa-solid fa-file-lines"></i>
-      <span>Solicitar Certificado</span>
-    </a>
-
-    <!-- Enlace: Historial -->
-    <a
-      routerLink="/empleado/historial-certificados"
-      routerLinkActive="bg-gray-700"
-      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition mt-2"
-    >
-      <i class="fa-solid fa-clock-rotate-left"></i>
-      <span>Historial de Certificados</span>
-    </a>
-
-    <!-- Enlace: Ayuda -->
-    <a
-      routerLink="/empleado/ayuda"
-      routerLinkActive="bg-gray-700"
-      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition mt-2"
-    >
-      <i class="fa-solid fa-circle-question"></i>
-      <span>Ayuda e Instrucciones</span>
-    </a>
-
-    <!-- Enlace: Cerrar sesión -->
-    
+    <nav class="flex flex-col space-y-3 text-sm">
+      <a class="flex items-center gap-3 hover:text-cyan-300" routerLink="/empleado/informacion-personal">
+        <i class="fa-solid fa-user text-lg"></i> Mis Datos
+      </a>
+      <a class="flex items-center gap-3 hover:text-cyan-300" routerLink="/empleado/solicitar-certificado">
+        <i class="fa-solid fa-file-pdf text-lg"></i> Solicitar Certificado
+      </a>
+      <a class="flex items-center gap-3 hover:text-cyan-300" routerLink="/empleado/historial-certificados">
+        <i class="fa-solid fa-clock-rotate-left text-lg"></i> Historial de Certificados
+      </a>
+      <a class="flex items-center gap-3 hover:text-cyan-300" routerLink="/empleado/ayuda">
+        <i class="fa-solid fa-circle-question text-lg"></i> Ayuda e Instrucciones
+      </a>
+    </nav>
   </div>
 </div>
