@@ -1,1 +1,37 @@
-<p>solicitar-certificado works!</p>
+<div class="p-6 max-w-xl mx-auto bg-white rounded shadow">
+  <h2 class="text-lg font-bold mb-4">Solicitar Certificado Laboral</h2>
+
+  <form (ngSubmit)="generarCertificado()">
+    <!-- Selección del tipo de certificado -->
+    <div class="mb-4">
+      <label class="block font-semibold mb-1">Tipo de Certificado:</label>
+      <div>
+        <label>
+          <input type="radio" name="tipo" value="salario" [(ngModel)]="tipoCertificado" /> Constancia con Salario
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="radio" name="tipo" value="funciones" [(ngModel)]="tipoCertificado" /> Constancia con Funciones
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="radio" name="tipo" value="historial" [(ngModel)]="tipoCertificado" /> Constancia de Cargos desempeñados
+        </label>
+      </div>
+    </div>
+
+    <!-- Fechas opcionales -->
+    <div class="mb-4">
+      <label class="block font-semibold mb-1">Filtrar por fechas (opcional):</label>
+      <input type="date" [(ngModel)]="fechaInicio" name="fechaInicio" class="border p-2 mr-2" />
+      <input type="date" [(ngModel)]="fechaFin" name="fechaFin" class="border p-2" />
+    </div>
+
+    <!-- Botón de generar -->
+    <button type="submit" class="bg-blue-600 text-white font-semibold px-4 py-2 rounded">
+      Generar Certificado PDF
+    </button>
+  </form>
+</div>

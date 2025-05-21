@@ -21,6 +21,7 @@ import { CertificadosModule } from './certificados/certificados.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { FuncionesModule } from './funciones/funciones.module';
 import { RolesModule } from './roles/roles.module';
+import { HistorialEmpleadoModule } from './historial-empleado/historial-empleado.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { RolesModule } from './roles/roles.module';
     UsuariosModule,
     FuncionesModule,
     RolesModule,
+    HistorialEmpleadoModule,
   ],
   //Controlador raiz de la aplicacion
   controllers: [AppController],
