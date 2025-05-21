@@ -1,6 +1,57 @@
 <div
-  class="fixed top-0 left-0 w-64 h-full bg-gray-800 text-white p-4 z-50 transform transition-transform duration-300"
+  class="fixed top-0 left-0 w-64 h-full bg-gray-800 text-white z-50 transform transition-transform duration-300"
   [ngClass]="{ '-translate-x-full': !abierto }"
 >
-  <p class="text-sm text-gray-300">Panel de navegación</p>
+  <!-- Logo -->
+  <div class="flex items-center justify-center h-24 border-b border-gray-600">
+    <img src="assets/logo_cootep.png" alt="Logo Cootep" class="h-12" />
+  </div>
+
+  <!-- Panel de navegación -->
+  <div class="p-4">
+    <p class="text-sm text-gray-400 mb-4">Panel de navegación</p>
+
+    <!-- Enlace: Mis Datos -->
+    <a
+      routerLink="/empleado/informacion-personal"
+      routerLinkActive="bg-gray-700"
+      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"
+    >
+      <i class="fa-solid fa-user"></i>
+      <span>Mis Datos</span>
+    </a>
+
+    <!-- Enlace: Solicitar Certificado -->
+    <a
+      routerLink="/empleado/solicitar-certificado"
+      routerLinkActive="bg-gray-700"
+      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition mt-2"
+    >
+      <i class="fa-solid fa-file-lines"></i>
+      <span>Solicitar Certificado</span>
+    </a>
+
+    <!-- Enlace: Historial -->
+    <a
+      routerLink="/empleado/historial-certificados"
+      routerLinkActive="bg-gray-700"
+      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition mt-2"
+    >
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span>Historial de Certificados</span>
+    </a>
+
+    <!-- Enlace: Ayuda -->
+    <a
+      routerLink="/empleado/ayuda"
+      routerLinkActive="bg-gray-700"
+      class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition mt-2"
+    >
+      <i class="fa-solid fa-circle-question"></i>
+      <span>Ayuda e Instrucciones</span>
+    </a>
+
+    <!-- Enlace: Cerrar sesión -->
+    
+  </div>
 </div>
