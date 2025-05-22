@@ -73,8 +73,10 @@ export class CertificadosService {
         'empleado.cargo',
         'empleado.cargo.funciones',
         'empleado.historial',
+        'empleado.historial.cargo',
       ],
     });
+
 
     if (!data || !data.empleado) {
       throw new NotFoundException('Empleado no encontrado');
@@ -170,12 +172,12 @@ export class CertificadosService {
           fontSize: 11,
           margin: [0, 0, 0, 30],
         },
-         {
-    image: 'firma',
-    width: 150,
-    alignment: 'center',
-    margin: [0, 0, 0, 10],
-  },
+        {
+          image: 'firma',
+          width: 150,
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
+        },
         {
           text: 'JONATHAN MAURICIO PEJENDINO ROSERO',
           bold: true,
@@ -188,77 +190,75 @@ export class CertificadosService {
       );
     }
 
- if (tipo === 'funciones') {
-  const nombreCompleto = `${empleado.nombres} ${empleado.apellidos}`.toUpperCase();
-  const fechaIngreso = new Date(empleado.fecha_ingreso);
-  const fechaTexto = fechaIngreso.toLocaleDateString('es-CO', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
+    if (tipo === 'funciones') {
+      const nombreCompleto = `${empleado.nombres} ${empleado.apellidos}`.toUpperCase();
+      const fechaIngreso = new Date(empleado.fecha_ingreso);
+      const fechaTexto = fechaIngreso.toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
 
-  const hoy = new Date();
-  const fechaHoyTexto = hoy.toLocaleDateString('es-CO', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
+      const hoy = new Date();
+      const fechaHoyTexto = hoy.toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
 
-  const funcionesData = funciones.length
-    ? funciones.map((f: any, i: number) => [String(i + 1), f.descripcion])
-    : [['-', '[Sin funciones registradas]']];
+      const funcionesData = funciones.length
+        ? funciones.map((f: any, i: number) => [String(i + 1), f.descripcion])
+        : [['-', '[Sin funciones registradas]']];
 
-  content.push(
-    {
-      text: `Que ${nombreCompleto}, identificado(a) con cédula de ciudadanía No. ${empleado.cedula} de Mocoa, presta sus servicios en nuestra Cooperativa, desde el día ${fechaTexto} hasta la fecha. Actualmente se desempeña en el cargo de ${empleado.cargo?.nombre || '[cargo]'}, con contrato a término fijo de un año que vence el día ${fechaTexto}, desarrollando las siguientes funciones:`,
-      fontSize: 11,
-      margin: [0, 0, 0, 10],
-    },
-    {
-      text: 'FUNCIONES DEL CARGO',
-      style: 'negritaMayus',
-      alignment: 'center',
-      margin: [0, 0, 0, 6],
-    },
-    {
-      table: {
-        widths: ['auto', '*'],
-        body: [
-          [
-            { text: 'N°', bold: true, alignment: 'center' },
-            { text: 'Descripción de la función', bold: true },
-          ],
-          ...funcionesData,
-        ],
-      },
-      fontSize: 9,
-      layout: 'lightHorizontalLines',
-      margin: [0, 0, 0, 20],
-    },
-    {
-      text: `Para constancia se firma en Mocoa, el día ${fechaHoyTexto}.`,
-      fontSize: 11,
-      margin: [0, 0, 0, 20],
-    },
-    {
-      image: 'firma',
-      width: 150,
-      alignment: 'center',
-      margin: [0, 0, 0, 10],
-    },
-    {
-      text: 'JONATHAN MAURICIO PEJENDINO ROSERO',
-      bold: true,
-      alignment: 'center',
-    },
-    {
-      text: 'Director de Talento Humano – COOTEP',
-      alignment: 'center',
+      content.push(
+        {
+          text: `Que ${nombreCompleto}, identificado(a) con cédula de ciudadanía No. ${empleado.cedula} de Mocoa, presta sus servicios en nuestra Cooperativa, desde el día ${fechaTexto} hasta la fecha. Actualmente se desempeña en el cargo de ${empleado.cargo?.nombre || '[cargo]'}, con contrato a término fijo de un año que vence el día ${fechaTexto}, desarrollando las siguientes funciones:`,
+          fontSize: 11,
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: 'FUNCIONES DEL CARGO',
+          style: 'negritaMayus',
+          alignment: 'center',
+          margin: [0, 0, 0, 6],
+        },
+        {
+          table: {
+            widths: ['auto', '*'],
+            body: [
+              [
+                { text: 'N°', bold: true, alignment: 'center' },
+                { text: 'Descripción de la función', bold: true },
+              ],
+              ...funcionesData,
+            ],
+          },
+          fontSize: 9,
+          layout: 'lightHorizontalLines',
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Para constancia se firma en Mocoa, el día ${fechaHoyTexto}.`,
+          fontSize: 11,
+          margin: [0, 0, 0, 20],
+        },
+        {
+          image: 'firma',
+          width: 150,
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: 'JONATHAN MAURICIO PEJENDINO ROSERO',
+          bold: true,
+          alignment: 'center',
+        },
+        {
+          text: 'Director de Talento Humano – COOTEP',
+          alignment: 'center',
+        }
+      );
     }
-  );
-}
-
-
 
     if (tipo === 'historial') {
       const historial = empleado.historial || [];
@@ -266,40 +266,101 @@ export class CertificadosService {
       const historialFiltrado = historial.filter((h: any) => {
         const desde = new Date(h.fecha_inicio);
         const hasta = new Date(h.fecha_fin);
-        const inicio = fechas?.fechaInicio
-          ? new Date(fechas.fechaInicio)
-          : null;
+        const inicio = fechas?.fechaInicio ? new Date(fechas.fechaInicio) : null;
         const fin = fechas?.fechaFin ? new Date(fechas.fechaFin) : null;
         return (!inicio || hasta >= inicio) && (!fin || desde <= fin);
       });
 
-      const lista = historialFiltrado.map((h: any) => {
-        return `${h.cargo} (${h.fecha_inicio} a ${h.fecha_fin})`;
+      const nombreCompleto = `${empleado.nombres} ${empleado.apellidos}`.toUpperCase();
+      const fechaInicioHistorial = historialFiltrado.length
+        ? new Date(historialFiltrado[0].fecha_inicio)
+        : null;
+      const fechaFinHistorial = historialFiltrado.length
+        ? new Date(historialFiltrado[historialFiltrado.length - 1].fecha_fin)
+        : null;
+
+      const fechaInicioTexto = fechaInicioHistorial?.toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
       });
 
-      content.push({
-        text: 'Historial de cargos desempeñados:',
-        style: 'negritaMayus',
-        margin: [0, 10, 0, 5],
+      const fechaFinTexto = fechaFinHistorial?.toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
       });
-      content.push({
-        ul: lista.length ? lista : ['[Sin historial disponible]'],
-        fontSize: 10,
+
+      const hoy = new Date();
+      const fechaHoyTexto = hoy.toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
       });
+
+      const listaCargos = historialFiltrado.map((h: any) => {
+        const cargoNombre = h.cargo?.nombre || '[Cargo no definido]';
+        const inicio = new Date(h.fecha_inicio).toLocaleDateString('es-CO', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        });
+        const fin = new Date(h.fecha_fin).toLocaleDateString('es-CO', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        });
+        return `${cargoNombre} del ${inicio} al ${fin}`;
+      });
+
+      content.push(
+        {
+          text: `Que el(la) señor(a) ${nombreCompleto}, identificado(a) con cédula de ciudadanía No. ${empleado.cedula} de Mocoa, prestó sus servicios en nuestra Cooperativa desde el ${fechaInicioTexto} hasta el ${fechaFinTexto}, desempeñando los siguientes cargos:`,
+          fontSize: 11,
+          margin: [0, 0, 0, 10],
+        },
+        {
+          ul: listaCargos.length ? listaCargos : ['[Sin historial disponible]'],
+          fontSize: 10,
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Para constancia se firma en Mocoa, el día ${fechaHoyTexto}.`,
+          fontSize: 11,
+          margin: [0, 0, 0, 20],
+        },
+        {
+          image: 'firma',
+          width: 150,
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: 'JONATHAN MAURICIO PEJENDINO ROSERO',
+          bold: true,
+          alignment: 'center',
+        },
+        {
+          text: 'Director de Talento Humano – COOTEP',
+          alignment: 'center',
+        }
+      );
     }
 
-   
+
+
+
     const firmaPath = path.join(process.cwd(), 'src', 'assets', 'firma.png');
-const firmaBase64 = fs.readFileSync(firmaPath).toString('base64');
+    const firmaBase64 = fs.readFileSync(firmaPath).toString('base64');
 
 
     // Crear PDF
     const docDefinition = {
       content,
       images: {
-  logo: 'data:image/png;base64,' + logoBase64,
-  firma: 'data:image/png;base64,' + firmaBase64,
-},
+        logo: 'data:image/png;base64,' + logoBase64,
+        firma: 'data:image/png;base64,' + firmaBase64,
+      },
 
       styles: {
         tituloInstitucional: { fontSize: 12, bold: true },
