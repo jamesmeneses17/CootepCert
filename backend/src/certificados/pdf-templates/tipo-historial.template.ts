@@ -1,28 +1,18 @@
 import { Content } from 'pdfmake/interfaces';
 import { generarPieFirma } from './footer.template';
 
-
 export function generarContenidoHistorial(
   empleado: any,
-  fechas?: { fechaInicio?: string; fechaFin?: string }
+  historial: any[]
 ): Content[] {
-  const historial = empleado.historial || [];
-
-  const historialFiltrado = historial.filter((h: any) => {
-    const desde = new Date(h.fecha_inicio);
-    const hasta = new Date(h.fecha_fin);
-    const inicio = fechas?.fechaInicio ? new Date(fechas.fechaInicio) : null;
-    const fin = fechas?.fechaFin ? new Date(fechas.fechaFin) : null;
-    return (!inicio || hasta >= inicio) && (!fin || desde <= fin);
-  });
-
   const nombreCompleto = `${empleado.nombres} ${empleado.apellidos}`.toUpperCase();
 
-  const fechaInicioHistorial = historialFiltrado.length
-    ? new Date(historialFiltrado[0].fecha_inicio)
+  const fechaInicioHistorial = historial.length
+    ? new Date(historial[0].fecha_inicio)
     : null;
-  const fechaFinHistorial = historialFiltrado.length
-    ? new Date(historialFiltrado[historialFiltrado.length - 1].fecha_fin)
+
+  const fechaFinHistorial = historial.length
+    ? new Date(historial[historial.length - 1].fecha_fin)
     : null;
 
   const fechaInicioTexto = fechaInicioHistorial?.toLocaleDateString('es-CO', {
@@ -44,18 +34,20 @@ export function generarContenidoHistorial(
     year: 'numeric',
   });
 
-  const listaCargos = historialFiltrado.map((h: any) => {
+  const listaCargos = historial.map((h: any) => {
     const cargoNombre = h.cargo?.nombre || '[Cargo no definido]';
     const inicio = new Date(h.fecha_inicio).toLocaleDateString('es-CO', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
     });
-    const fin = new Date(h.fecha_fin).toLocaleDateString('es-CO', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    });
+    const fin = h.fecha_fin
+      ? new Date(h.fecha_fin).toLocaleDateString('es-CO', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        })
+      : 'la fecha'; // Puedes poner 'actualidad' si quieres
     return `${cargoNombre} del ${inicio} al ${fin}`;
   });
 
@@ -75,7 +67,6 @@ export function generarContenidoHistorial(
       fontSize: 11,
       margin: [0, 0, 0, 20],
     },
-      ...generarPieFirma()
-
+    ...generarPieFirma(),
   ];
 }

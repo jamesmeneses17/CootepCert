@@ -18,8 +18,6 @@ export class Usuario {
   @Column({ unique: true })
   correo: string;
 
-  @Column({ unique: true })
-  cedula: string;
 
   @Column({ nullable: true })
   codigo_verificacion: string;

@@ -33,8 +33,7 @@ export class Empleado {
   @Column({ type: 'date' })
   fecha_nacimiento: Date;
 
-  @Column({ type: 'date' })
-  fecha_ingreso: Date;
+ 
 
   @ManyToOne(() => Genero)
   @JoinColumn({ name: 'genero_id' })
@@ -48,9 +47,7 @@ export class Empleado {
   @JoinColumn({ name: 'lugar_expedicion_id' })
   lugarExpedicion: Municipio;
 
-  @ManyToOne(() => Cargo)
-  @JoinColumn({ name: 'cargo_id' })
-  cargo: Cargo;
+  
 
   @ManyToOne(() => TipoContrato)
   @JoinColumn({ name: 'tipo_contrato_id' })
@@ -66,8 +63,6 @@ export class Empleado {
   @OneToMany(() => HistorialEmpleado, (historial) => historial.empleado)
 historial: HistorialEmpleado[];
 
-@Column('decimal', { precision: 10, scale: 2 })
-salario: number;
 
 
   

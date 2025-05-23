@@ -1,12 +1,25 @@
-// src/certificados/pdf-templates/tipo-funciones.template.ts
 import { Content } from 'pdfmake/interfaces';
 import { generarPieFirma } from './footer.template';
 
-
-export function generarContenidoFunciones(empleado: any, funciones: any[]): Content[] {
+export function generarContenidoFunciones(
+  empleado: any,
+  funciones: any[],
+  historial: any[]
+): Content[] {
   const nombreCompleto = `${empleado.nombres} ${empleado.apellidos}`.toUpperCase();
-  const fechaIngreso = new Date(empleado.fecha_ingreso);
-  const fechaTexto = fechaIngreso.toLocaleDateString('es-CO', {
+
+  const fechaIngreso = new Date(historial[0]?.fecha_inicio);
+  const fechaIngresoTexto = fechaIngreso.toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  const cargoActual = historial[historial.length - 1]?.cargo?.nombre || '[cargo no disponible]';
+
+  const fechaVencimiento = new Date(historial[0]?.fecha_inicio);
+  fechaVencimiento.setFullYear(fechaIngreso.getFullYear() + 1);
+  const fechaVencimientoTexto = fechaVencimiento.toLocaleDateString('es-CO', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -25,7 +38,7 @@ export function generarContenidoFunciones(empleado: any, funciones: any[]): Cont
 
   return [
     {
-      text: `Que ${nombreCompleto}, identificado(a) con cédula de ciudadanía No. ${empleado.cedula} de Mocoa, presta sus servicios en nuestra Cooperativa, desde el día ${fechaTexto} hasta la fecha. Actualmente se desempeña en el cargo de ${empleado.cargo?.nombre || '[cargo]'}, con contrato a término fijo de un año que vence el día ${fechaTexto}, desarrollando las siguientes funciones:`,
+      text: `Que ${nombreCompleto}, identificado(a) con cédula de ciudadanía No. ${empleado.cedula} de Mocoa, presta sus servicios en nuestra Cooperativa, desde el día ${fechaIngresoTexto} hasta la fecha. Actualmente se desempeña en el cargo de ${cargoActual}, con contrato a término fijo de un año que vence el día ${fechaVencimientoTexto}, desarrollando las siguientes funciones:`,
       fontSize: 11,
       margin: [0, 0, 0, 10],
     },
@@ -55,7 +68,7 @@ export function generarContenidoFunciones(empleado: any, funciones: any[]): Cont
       fontSize: 11,
       margin: [0, 0, 0, 20],
     },
-   ...generarPieFirma()
-
+    ...generarPieFirma(),
+    
   ];
 }

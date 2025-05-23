@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Empleado } from '../empleados/empleado.entity';
 import { Funcion } from '../funciones/funcion.entity';
+import { HistorialEmpleado } from 'src/historial-empleado/historial-empleado.entity';
 
 @Entity('cargos')
 export class Cargo {
@@ -10,9 +11,11 @@ export class Cargo {
   @Column({ length: 100 })
   nombre: string;
 
-  @OneToMany(() => Empleado, empleado => empleado.cargo)
-  empleados: Empleado[];
+  
+@OneToMany(() => HistorialEmpleado, (historial) => historial.cargo)
+historiales: HistorialEmpleado[];
 
-  @OneToMany(() => Funcion, funcion => funcion.cargo)
+@OneToMany(() => Funcion, (funcion) => funcion.cargo)
 funciones: Funcion[];
+
 }

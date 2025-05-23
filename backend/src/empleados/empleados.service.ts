@@ -12,39 +12,37 @@ export class EmpleadosService {
 
     @InjectRepository(Usuario) // 👈 Inyectar repositorio de Usuario
     private readonly usuarioRepository: Repository<Usuario>,
-  ) {}
+  ) { }
 
   create(data: Partial<Empleado>) {
     const nuevoEmpleado = this.empleadoRepository.create(data);
     return this.empleadoRepository.save(nuevoEmpleado);
   }
 
-  findAll() {
-    return this.empleadoRepository.find({
-      relations: [
-        'genero',
-        'municipioNacimiento',
-        'lugarExpedicion',
-        'cargo',
-        'tipoContrato',
-        'usuario'
-      ],
-    });
-  }
+ findAll() {
+  return this.empleadoRepository.find({
+    relations: [
+      'genero',
+      'municipioNacimiento',
+      'lugarExpedicion',
+      'usuario'
+    ],
+  });
+}
+
 
   findOne(id: number) {
-    return this.empleadoRepository.findOne({
-      where: { id },
-      relations: [
-        'genero',
-        'municipioNacimiento',
-        'lugarExpedicion',
-        'cargo',
-        'tipoContrato',
-        'usuario'
-      ],
-    });
-  }
+  return this.empleadoRepository.findOne({
+    where: { id },
+    relations: [
+      'genero',
+      'municipioNacimiento',
+      'lugarExpedicion',
+      'usuario'
+    ],
+  });
+}
+
 
   async update(id: number, data: Partial<Empleado>) {
     const empleado = await this.empleadoRepository.findOne({

@@ -7,6 +7,8 @@ import { generarContenidoSalario } from './pdf-templates/tipo-salario.template';
 import { generarContenidoFunciones } from './pdf-templates/tipo-funciones.template';
 import { generarContenidoHistorial } from './pdf-templates/tipo-historial.template';
 import { generarEncabezadoPDF } from './pdf-templates/header.template';
+import { HistorialEmpleado } from 'src/historial-empleado/historial-empleado.entity';
+
 
 
 
@@ -24,7 +26,11 @@ export class CertificadosService {
   constructor(
     @InjectRepository(Certificado)
     private readonly certificadoRepo: Repository<Certificado>,
+
+    @InjectRepository(HistorialEmpleado)
+    private readonly historialRepo: Repository<HistorialEmpleado>,
   ) { }
+
 
   create(data: Partial<Certificado>) {
     const certificado = this.certificadoRepo.create(data);
@@ -76,11 +82,8 @@ export class CertificadosService {
       where: { empleado: { id: empleadoId } },
       relations: [
         'empleado',
-        'empleado.cargo',
-        'empleado.cargo.funciones',
-        'empleado.historial',
-        'empleado.historial.cargo',
       ],
+
     });
 
 
@@ -89,8 +92,26 @@ export class CertificadosService {
     }
 
     const { empleado } = data;
-    const cargo = empleado.cargo;
+    // 1. Obtener el historial del empleado ordenado por fecha
+    const historial = await this.historialRepo.find({
+      where: { empleado: { id: empleado.id } },
+      relations: ['cargo', 'cargo.funciones'],
+      order: { fecha_inicio: 'ASC' },
+    });
+    console.log('Funciones cargadas desde el último cargo:');
+    console.log(JSON.stringify(historial[historial.length - 1].cargo.funciones, null, 2));
+
+
+
+    if (!historial || historial.length === 0) {
+      throw new NotFoundException('El empleado no tiene historial registrado');
+    }
+
+    // 2. Tomar el último registro como el cargo actual
+    const ultimoHistorial = historial[historial.length - 1];
+    const cargo = ultimoHistorial.cargo;
     const funciones = cargo?.funciones || [];
+
 
     // Cargar logo
     const logoPath = path.join(
@@ -106,16 +127,16 @@ export class CertificadosService {
 
     // 🔁 Agregar contenido según el tipo solicitado
     if (tipo === 'salario') {
-      content.push(...generarContenidoSalario(empleado));
+      content.push(...generarContenidoSalario(empleado, historial));
     }
 
 
     if (tipo === 'funciones') {
-      content.push(...generarContenidoFunciones(empleado, funciones));
+      content.push(...generarContenidoFunciones(empleado, funciones, historial));
     }
 
     if (tipo === 'historial') {
-      const contenidoHistorial = generarContenidoHistorial(empleado, fechas);
+      const contenidoHistorial = generarContenidoHistorial(empleado, historial);
       content.push(...contenidoHistorial);
     }
 

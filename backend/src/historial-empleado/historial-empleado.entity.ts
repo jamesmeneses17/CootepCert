@@ -18,9 +18,10 @@ export class HistorialEmpleado {
   @JoinColumn({ name: 'empleado_id' })
   empleado: Empleado;
 
-  @ManyToOne(() => Cargo)
-  @JoinColumn({ name: 'cargo_id' })
-  cargo: Cargo;
+@ManyToOne(() => Cargo, (cargo) => cargo.historiales)
+@JoinColumn({ name: 'cargo_id' })
+cargo: Cargo;
+
 
   @Column({ type: 'date' })
   fecha_inicio: Date;
@@ -40,4 +41,6 @@ export class HistorialEmpleado {
 
   @Column({ type: 'text', nullable: true })
   observaciones: string;
+
+  
 }
