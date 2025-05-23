@@ -1,4 +1,6 @@
 export interface Empleado {
+historial: any;
+historialEmpleado: any;
   id: number;
   cedula: string;
   nombres: string;
@@ -10,6 +12,9 @@ export interface Empleado {
   genero: { id: number; nombre: string };
   municipioNacimiento: { id: number; nombre: string };
   lugarExpedicion: { id: number; nombre: string };
-  cargo: { id: number; nombre: string };
   tipoContrato: { id: number; nombre: string };
+  // 👇 Agrega estas dos si aún no las tienes
+  cargo?: any;
+  fechaIngresoActual?: string;
+  
 }

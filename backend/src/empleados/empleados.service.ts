@@ -19,29 +19,46 @@ export class EmpleadosService {
     return this.empleadoRepository.save(nuevoEmpleado);
   }
 
- findAll() {
-  return this.empleadoRepository.find({
+  async findAll() {
+  const empleados = await this.empleadoRepository.find({
     relations: [
       'genero',
       'municipioNacimiento',
       'lugarExpedicion',
-      'usuario'
+      'tipoContrato',
+      'usuario',
+      'historial',
+      'historial.cargo',
     ],
   });
+
+  return empleados.map(e => {
+    const ultimoHistorial = e.historial?.sort((a, b) =>
+      new Date(b.fecha_inicio).getTime() - new Date(a.fecha_inicio).getTime()
+    )[0];
+
+    return {
+      ...e,
+      cargo: ultimoHistorial?.cargo || null,
+      fechaIngresoActual: ultimoHistorial?.fecha_inicio || null,
+    };
+  });
 }
+
+
 
 
   findOne(id: number) {
-  return this.empleadoRepository.findOne({
-    where: { id },
-    relations: [
-      'genero',
-      'municipioNacimiento',
-      'lugarExpedicion',
-      'usuario'
-    ],
-  });
-}
+    return this.empleadoRepository.findOne({
+      where: { id },
+      relations: [
+        'genero',
+        'municipioNacimiento',
+        'lugarExpedicion',
+        'usuario'
+      ],
+    });
+  }
 
 
   async update(id: number, data: Partial<Empleado>) {

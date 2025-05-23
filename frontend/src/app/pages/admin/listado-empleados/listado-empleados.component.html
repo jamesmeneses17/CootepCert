@@ -1,36 +1,36 @@
-<h2>Listado de Empleados</h2>
+<h2 class="text-xl font-bold mb-4">Listado de Empleados</h2>
 
-<input
-  type="text"
-  [(ngModel)]="filtro"
-  placeholder="Buscar por cédula o nombre"
-  class="border px-4 py-2 mb-4 w-full"
-/>
+<input type="text" [(ngModel)]="filtro" placeholder="Buscar por cédula o nombre"
+  class="border px-4 py-2 mb-4 w-full rounded" />
 
-<table class="w-full border">
-  <thead>
+<table class="w-full border border-gray-300 rounded text-sm">
+  <thead class="bg-gray-100">
     <tr>
-      <th>Nombres</th>
-      <th>Apellidos</th>
-      <th>Cédula</th>
-      <th>Cargo</th>
-      <th>Fecha de Ingreso</th>
-      <th>Acciones</th> <!-- ✅ Nueva columna -->
+      <th class="px-3 py-2 border">Cédula</th>
+      <th class="px-3 py-2 border">Nombre Completo</th>
+      <th class="px-3 py-2 border">Cargo</th>
+      <th class="px-3 py-2 border">Fecha de Ingreso</th>
+      <th class="px-3 py-2 border">Acciones</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let empleado of empleadosFiltrados">
-      <td>{{ empleado.nombres }}</td>
-      <td>{{ empleado.apellidos }}</td>
-      <td>{{ empleado.correo }}</td>
-      <td>{{ empleado.cedula }}</td>
-      <td>{{ empleado.cargo?.nombre }}</td>
-      <td>{{ empleado.fecha_ingreso }}</td>
-      <td>
-        <a
-          [routerLink]="['/admin/empleados/editar', empleado.id]"
-          class="text-white bg-yellow-500 px-3 py-1 rounded inline-block hover:bg-yellow-600"
-        >
+    <tr *ngFor="let empleado of empleadosFiltrados" class="hover:bg-gray-50">
+      <td class="px-3 py-2 border">{{ empleado.cedula }}</td>
+      <td class="px-3 py-2 border">{{ empleado.nombres }} {{ empleado.apellidos }}</td>
+      <td class="px-3 py-2 border">
+        {{ empleado.cargo?.nombre || '[Sin cargo]' }}
+      </td>
+    <td class="px-3 py-2 border">
+  {{ empleado.fechaIngresoActual ? (empleado.fechaIngresoActual | date:'dd/MM/yyyy') : '[Sin fecha]' }}
+</td>
+
+      <td class="px-3 py-2 border text-center space-x-1">
+        <a [routerLink]="['/admin/empleados/ver', empleado.id]"
+          class="text-white bg-blue-500 px-2 py-1 rounded hover:bg-blue-600">
+          👁️
+        </a>
+        <a [routerLink]="['/admin/empleados/editar', empleado.id]"
+          class="text-white bg-yellow-500 px-2 py-1 rounded hover:bg-yellow-600">
           ✏️
         </a>
       </td>
